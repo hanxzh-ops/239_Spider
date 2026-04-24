@@ -1,0 +1,184 @@
+<!-- Copyright 2021 DeepMind Technologies Limited
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+
+<mujoco model="hexapod">
+    <compiler autolimits="true"/>
+
+    <asset>
+        <texture name="grid" type="2d" builtin="checker"
+                 width="512" height="512"
+                 rgb1=".1 .2 .3" rgb2=".2 .3 .4"/>
+        <material name="grid" texture="grid"
+                  texrepeat="1 1" texuniform="true" reflectance=".2"/>
+
+        <material name="body_mat" rgba="0.3 0.3 0.3 1"/>
+        <material name="leg_mat" rgba="0.8 0.2 0.2 1"/>
+    </asset>
+
+    <default>
+        <joint damping="0.03"/>
+    </default>
+
+    <worldbody>
+        <!-- Ground plane -->
+        <geom type="plane" size="3 3 0.01" material="grid"/>
+
+        <!-- Lighting -->
+        <light name="sun" pos="0 0 2" mode="trackcom"
+               diffuse="0.8 0.8 0.8"/>
+
+        <!-- Hexapod body -->
+        <body name="torso" pos="0 0 0.05">
+            <freejoint/>
+            <geom type="box" size="0.08 0.05 0.02"
+                  material="body_mat"/>
+
+            <!-- LEFT FRONT -->
+            <body name="leg0_base" pos="0.1 0.05 0">
+                <joint name="leg0_coxa_j" type="hinge" axis="0 0 1" range="0 90"/>
+                <geom name="leg0_coxa" type="capsule" size="0.01 0.025" pos="0 0 0" material="leg_mat"/>
+
+                <body name="leg0_femur" pos="0 0 0">
+                    <joint name="leg0_femur_j" type="hinge" axis="0 1 0" range="30 75"/>
+                    <geom name="leg0_femur_g" type="capsule" size="0.01 0.04" pos="0 0 0.05" material="leg_mat"/>
+
+                    <body name="leg0_tibia" pos="0 0 0.1">
+                        <joint name="leg0_tibia_j" type="hinge" axis="0 1 0" range="15 105"/>
+                        <geom name="leg0_tibia_g" type="capsule" size="0.01 0.05" pos="0 0 0.05" material="leg_mat"/>
+                    </body>
+                </body>
+            </body>
+            <!-- RIGHT FRONT -->
+            <body name="leg1_base" pos="0.1 -0.05 0">
+                <joint name="leg1_coxa_j" type="hinge" axis="0 0 1" range="-90 0"/>
+                <geom name="leg1_coxa" type="capsule" size="0.01 0.025" pos="0 0 0" material="leg_mat"/>
+
+                <body name="leg1_femur" pos="0 0 0">
+                    <joint name="leg1_femur_j" type="hinge" axis="0 1 0" range="30 75"/>
+                    <geom name="leg1_femur_g" type="capsule" size="0.01 0.04" pos="0 0 0.05" material="leg_mat"/>
+
+                    <body name="leg1_tibia" pos="0 0 0.1">
+                        <joint name="leg1_tibia_j" type="hinge" axis="0 1 0" range="15 105"/>
+                        <geom name="leg1_tibia_g" type="capsule" size="0.01 0.05" pos="0 0 0.05" material="leg_mat"/>
+                    </body>
+                </body>
+            </body>
+            
+
+            <!-- LEFT MID -->
+            <body name="leg2_base" pos="0 0.05 0">
+                <joint name="leg2_coxa_j" type="hinge" axis="0 0 1" range="45 135"/>
+                <geom name="leg2_coxa" type="capsule" size="0.01 0.025" pos="0 0 0" material="leg_mat"/>
+
+                <body name="leg2_femur" pos="0 0 0">
+                    <joint name="leg2_femur_j" type="hinge" axis="0 1 0" range="30 75"/>
+                    <geom name="leg2_femur_g" type="capsule" size="0.01 0.04" pos="0 0 0.05" material="leg_mat"/>
+
+                    <body name="leg2_tibia" pos="0 0 0.1">
+                        <joint name="leg2_tibia_j" type="hinge" axis="0 1 0" range="15 105"/>
+                        <geom name="leg2_tibia_g" type="capsule" size="0.01 0.05" pos="0 0 0.05" material="leg_mat"/>
+                    </body>
+                </body>
+            </body>
+
+            <!-- RIGHT MID -->
+            <body name="leg3_base" pos="0 -0.05 0">
+                <joint name="leg3_coxa_j" type="hinge" axis="0 0 1" range="225 315"/>
+                <geom name="leg3_coxa" type="capsule" size="0.01 0.025" pos="0 0 0" material="leg_mat"/>
+
+                <body name="leg3_femur" pos="0 0 0">
+                    <joint name="leg3_femur_j" type="hinge" axis="0 1 0" range="30 75"/>
+                    <geom name="leg3_femur_g" type="capsule" size="0.01 0.04" pos="0 0 0.05" material="leg_mat"/>
+
+                    <body name="leg3_tibia" pos="0 0 0.1">
+                        <joint name="leg3_tibia_j" type="hinge" axis="0 1 0" range="15 105"/>
+                        <geom name="leg3_tibia_g" type="capsule" size="0.01 0.05" pos="0 0 0.05" material="leg_mat"/>
+                    </body>
+                </body>
+            </body>
+
+            <!-- LEFT REAR -->
+            <body name="leg4_base" pos="-0.1 0.05 0">
+                <joint name="leg4_coxa_j" type="hinge" axis="0 0 1" range="90 180"/>
+                <geom name="leg4_coxa" type="capsule" size="0.01 0.025" pos="0 0 0" material="leg_mat"/>
+
+                <body name="leg4_femur" pos="0 0 0">
+                    <joint name="leg4_femur_j" type="hinge" axis="0 1 0" range="30 75"/>
+                    <geom name="leg4_femur_g" type="capsule" size="0.01 0.04" pos="0 0 0.05" material="leg_mat"/>
+
+                    <body name="leg4_tibia" pos="0 0 0.1">
+                        <joint name="leg4_tibia_j" type="hinge" axis="0 1 0" range="15 105"/>
+                        <geom name="leg4_tibia_g" type="capsule" size="0.01 0.05" pos="0 0 0.05" material="leg_mat"/>
+                    </body>
+                </body>
+            </body>
+
+            <!-- RIGHT REAR -->
+            <body name="leg5_base" pos="-0.1 -0.05 0">
+                <joint name="leg5_coxa_j" type="hinge" axis="0 0 1" range="180 270"/>
+                <geom name="leg5_coxa" type="capsule" size="0.01 0.025" pos="0 0 0" material="leg_mat"/>
+
+                <body name="leg5_femur" pos="0 0 0">
+                    <joint name="leg5_femur_j" type="hinge" axis="0 1 0" range="30 75"/>
+                    <geom name="leg5_femur_g" type="capsule" size="0.01 0.04" pos="0 0 0.05" material="leg_mat"/>
+
+                    <body name="leg5_tibia" pos="0 0 0.1">
+                        <joint name="leg5_tibia_j" type="hinge" axis="0 1 0" range="15 105"/>
+                        <geom name="leg5_tibia_g" type="capsule" size="0.01 0.05" pos="0 0 0.05" material="leg_mat"/>
+                    </body>
+               </body>
+            </body>
+            
+
+
+        </body>
+    </worldbody>
+      <!-- =====================================
+       Actuators : Position control joints
+       Each joint gets its own position actuator
+       ===================================== -->
+<actuator>
+
+    <!-- Coxa joints -->
+    <position name="act_leg0_coxa" joint="leg0_coxa_j" kp="2" ctrlrange="0 1.57"/>
+    <position name="act_leg1_coxa" joint="leg1_coxa_j" kp="2" ctrlrange="-1.57 0"/>
+    <position name="act_leg2_coxa" joint="leg2_coxa_j" kp="2" ctrlrange="0.79 2.36"/>
+    <position name="act_leg3_coxa" joint="leg3_coxa_j" kp="2" ctrlrange="-2.36 -0.79"/>
+    <position name="act_leg4_coxa" joint="leg4_coxa_j" kp="2" ctrlrange="1.57 3.14"/>
+    <position name="act_leg5_coxa" joint="leg5_coxa_j" kp="2" ctrlrange="-3.14 -1.57"/>
+
+    <!-- Femur joints -->
+    <position name="act_leg0_femur" joint="leg0_femur_j" kp="5" ctrlrange="0.52 1.31"/>
+    <position name="act_leg1_femur" joint="leg1_femur_j" kp="5" ctrlrange="0.52 1.31"/>
+    <position name="act_leg2_femur" joint="leg2_femur_j" kp="5" ctrlrange="0.52 1.31"/>
+    <position name="act_leg3_femur" joint="leg3_femur_j" kp="5" ctrlrange="0.52 1.31"/>
+    <position name="act_leg4_femur" joint="leg4_femur_j" kp="5" ctrlrange="0.52 1.31"/>
+    <position name="act_leg5_femur" joint="leg5_femur_j" kp="5" ctrlrange="0.52 1.31"/>
+
+    <!-- Tibia joints -->
+    <position name="act_leg0_tibia" joint="leg0_tibia_j" kp="5" ctrlrange="0.26 1.83"/>
+    <position name="act_leg1_tibia" joint="leg1_tibia_j" kp="5" ctrlrange="0.26 1.83"/>
+    <position name="act_leg2_tibia" joint="leg2_tibia_j" kp="5" ctrlrange="0.26 1.83"/>
+    <position name="act_leg3_tibia" joint="leg3_tibia_j" kp="5" ctrlrange="0.26 1.83"/>
+    <position name="act_leg4_tibia" joint="leg4_tibia_j" kp="5" ctrlrange="0.26 1.83"/>
+    <position name="act_leg5_tibia" joint="leg5_tibia_j" kp="5" ctrlrange="0.26 1.83"/>
+
+</actuator>
+   
+
+
+
+</mujoco>

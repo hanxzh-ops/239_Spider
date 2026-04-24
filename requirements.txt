@@ -1,0 +1,9 @@
+mujoco>=3.0.0
+numpy>=1.24.0
+# pynput is required for smooth hold-to-move keyboard control.
+# Without it the robot only moves in short bursts (one press = one step).
+#   pip install pynput
+#
+# macOS: if keys are not detected, grant Terminal (or your IDE) Accessibility
+#        access in System Settings → Privacy & Security → Accessibility.
+pynput>=1.7.0
