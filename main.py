@@ -5,10 +5,10 @@ main.py — Hexapod Spider Robot  ·  Keyboard-Controlled Demo
 
 Movement keys (hold for continuous motion, release to slow down)
 ----------------------------------------------------------------
-  W  / Up-arrow   Walk forward
-  S  / Down-arrow Walk backward
-  A               Turn left  (CCW)
-  D               Turn right (CW)
+  W  / Up-arrow      Walk forward
+  S  / Down-arrow    Walk backward
+  A  / Left-arrow    Turn left  (CCW)
+  D  / Right-arrow   Turn right (CW)
 
   W + A  /  W + D     Arc walk — forward while turning
   S + A  /  S + D     Arc walk — backward while turning
@@ -85,9 +85,10 @@ try:
             if k in ('w', 'a', 's', 'd'):
                 _held.add(k)
         except AttributeError:
-            # Special keys  (arrow keys, etc.)
             if   key == _pynput_kb.Key.up:    _held.add('up')
             elif key == _pynput_kb.Key.down:  _held.add('down')
+            elif key == _pynput_kb.Key.left:  _held.add('left')
+            elif key == _pynput_kb.Key.right: _held.add('right')
 
     def _on_release(key):
         try:
@@ -96,6 +97,8 @@ try:
         except AttributeError:
             if   key == _pynput_kb.Key.up:    _held.discard('up')
             elif key == _pynput_kb.Key.down:  _held.discard('down')
+            elif key == _pynput_kb.Key.left:  _held.discard('left')
+            elif key == _pynput_kb.Key.right: _held.discard('right')
 
     _listener = _pynput_kb.Listener(on_press=_on_press, on_release=_on_release,
                                     suppress=False)
@@ -115,6 +118,8 @@ KEY_ESC   = 256
 KEY_SPACE = 32
 KEY_UP    = 265
 KEY_DOWN  = 264
+KEY_LEFT  = 263
+KEY_RIGHT = 262
 KEY_W     = ord('W')
 KEY_S     = ord('S')
 KEY_A     = ord('A')
@@ -139,13 +144,15 @@ HELP = """
 ╔══════════════════════════════════════════════════╗
 ║   Hexapod Spider — Keyboard Controls             ║
 ╠══════════════════════════════════════════════════╣
-║  W / ↑    Walk forward    (hold to keep moving)  ║
-║  S / ↓    Walk backward   (hold to keep moving)  ║
-║  A        Turn left       (hold to keep turning) ║
-║  D        Turn right      (hold to keep turning) ║
-║                                                  ║
-║  W+A / W+D   Arc walk (forward + turn)           ║
-║  S+A / S+D   Arc walk (backward + turn)          ║
+║  W / ↑      Walk forward    (hold to keep moving)  ║
+║  S / ↓      Walk backward   (hold to keep moving)  ║
+║  A / ←      Turn left       (hold to keep turning) ║
+║  D / →      Turn right      (hold to keep turning) ║
+║                                                    ║
+║  W+A / W+←   Arc walk (forward + turn left)        ║
+║  W+D / W+→   Arc walk (forward + turn right)       ║
+║  S+A / S+←   Arc walk (backward + turn left)       ║
+║  S+D / S+→   Arc walk (backward + turn right)      ║
 ║                                                  ║
 ║  Release keys → robot gradually slows to a stop  ║
 ╠══════════════════════════════════════════════════╣
@@ -204,7 +211,8 @@ def main():
 
         # ── Fallback movement key tracking (only used when pynput is off) ─
         if not _PYNPUT_OK and keycode in (KEY_W, KEY_S, KEY_A, KEY_D,
-                                          KEY_UP, KEY_DOWN):
+                                          KEY_UP, KEY_DOWN,
+                                          KEY_LEFT, KEY_RIGHT):
             _hold_exp[keycode] = time.time() + KEY_HOLD
 
     # ── 5. Main simulation loop ───────────────────────────────────────────
@@ -217,18 +225,18 @@ def main():
             # ── Compute desired velocity from key state ───────────────────
             if _PYNPUT_OK:
                 # pynput: real press/release tracking — reliable hold-to-move
-                fwd  = (1.0 if ('w'  in _held or 'up'   in _held) else 0.0) \
-                     - (1.0 if ('s'  in _held or 'down' in _held) else 0.0)
-                turn = (1.0 if ('a'  in _held) else 0.0) \
-                     - (1.0 if ('d'  in _held) else 0.0)
+                fwd  = (1.0 if ('w' in _held or 'up'    in _held) else 0.0) \
+                     - (1.0 if ('s' in _held or 'down'  in _held) else 0.0)
+                turn = (1.0 if ('a' in _held or 'left'  in _held) else 0.0) \
+                     - (1.0 if ('d' in _held or 'right' in _held) else 0.0)
             else:
                 # Fallback: timeout window from last GLFW_PRESS event
                 now = time.time()
                 def _exp(k): return now < _hold_exp.get(k, 0.0)
-                fwd  = (1.0 if (_exp(KEY_W) or _exp(KEY_UP))   else 0.0) \
-                     - (1.0 if (_exp(KEY_S) or _exp(KEY_DOWN))  else 0.0)
-                turn = (1.0 if _exp(KEY_A) else 0.0) \
-                     - (1.0 if _exp(KEY_D) else 0.0)
+                fwd  = (1.0 if (_exp(KEY_W) or _exp(KEY_UP))          else 0.0) \
+                     - (1.0 if (_exp(KEY_S) or _exp(KEY_DOWN))         else 0.0)
+                turn = (1.0 if (_exp(KEY_A) or _exp(KEY_LEFT))         else 0.0) \
+                     - (1.0 if (_exp(KEY_D) or _exp(KEY_RIGHT))        else 0.0)
 
             controller.set_velocity(fwd, turn)
 
