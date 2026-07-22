@@ -4,6 +4,21 @@ A physics-based simulation of a six-legged (hexapod) robot built with [MuJoCo](h
 The robot walks, turns, and arc-walks in real time using keyboard input.  
 All motion is computed with closed-form forward and inverse kinematics; no pre-recorded motion clips are used.
 
+> **This repo is now also a ROS2 + reinforcement-learning learning project.** Three
+> new areas build on the sim above:
+>
+> - **`docs/ROS2_CONCEPTS.md`** — learn ROS2 (nodes, topics, services, actions,
+>   params) by mapping each concept onto *this* controller. Read this first.
+> - **`ros2_ws/`** — a buildable ROS2 (Humble) package (`spider_control`) that splits
+>   the monolithic `main.py` into `sim_node`, `gait_node`, `teleop_node`, and a
+>   drop-in `policy_node` for the trained RL policy.
+> - **`rl/`** — a Gymnasium environment (`hexapod_env.py`) + Stable-Baselines3 PPO
+>   (`train.py`, `eval.py`) that learns a walking gait from scratch (18 direct joint
+>   targets). See `rl/README.md`.
+>
+> Suggested learning order: this README → `docs/ROS2_CONCEPTS.md` → `ros2_ws/` →
+> `rl/`.
+
 ---
 
 ## Table of Contents

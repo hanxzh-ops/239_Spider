@@ -7,3 +7,13 @@ numpy>=1.24.0
 # macOS: if keys are not detected, grant Terminal (or your IDE) Accessibility
 #        access in System Settings → Privacy & Security → Accessibility.
 pynput>=1.7.0
+
+# ── Reinforcement learning (rl/ — train a walking policy with PPO) ──────────
+# Optional; only needed for the RL stack, not the keyboard demo.
+gymnasium>=0.29.0
+stable-baselines3>=2.0.0
+# torch is pulled in automatically by stable-baselines3
+
+# ── ROS2 (ros2_ws/) ────────────────────────────────────────────────────────
+# rclpy / std_msgs / sensor_msgs / geometry_msgs come from a ROS2 Humble install
+# (apt / ros2 desktop), NOT pip. See ros2_ws/README.md.
